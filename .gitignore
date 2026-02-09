@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Vagrant
+.vagrant/
+*.log
+
+# Docker
+.dockerignore
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
