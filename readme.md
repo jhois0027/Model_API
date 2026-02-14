@@ -17,24 +17,25 @@ Docker
 
 Vagrant (para entorno Linux reproducible)
 
-**📂 Estructura del proyecto**
 VAGRANT_API/
-├─ .vagrant/
-│  └─ machines/rgloader
-├─ finanzas_API/
-│  ├─ __pycache__/
-│  ├─ .pytest_cache/
-│  ├─ test/
-│  ├─ .gitignore
-│  ├─ dataset_estatico.csv
-│  ├─ Dockerfile
-│  ├─ main.py
-│  ├─ model.pkl
-│  ├─ readme.md
-│  ├─ requirements.txt
-│  └─ train.py
-├─ ubuntu-bionic-18.04-cloudimg-console.log
-└─ Vagrantfile
+├─ 📁 .vagrant/
+│  └─ 📁 machines/
+│      └─ 📄 rgloader
+├─ 📁 finanzas_API/
+│  ├─ 📁 __pycache__/
+│  ├─ 📁 .pytest_cache/
+│  ├─ 📁 test/
+│  ├─ 📄 .gitignore
+│  ├─ 📄 dataset_estatico.csv
+│  ├─ 📄 Dockerfile
+│  ├─ 📄 main.py
+│  ├─ 📄 model.pkl
+│  ├─ 📄 readme.md
+│  ├─ 📄 requirements.txt
+│  └─ 📄 train.py
+├─ 📄 ubuntu-bionic-18.04-cloudimg-console.log
+└─ 📄 Vagrantfile
+
 
 **🚀 Instalación y ejecución**
 1️⃣ Clonar el repositorio
@@ -126,5 +127,6 @@ GitHub: https://github.com/jhois0027
 La API es demostrativa y puede integrarse con cualquier frontend para estimar gastos en tiempo real.
 
 Vagrant asegura un entorno controlado y reproducible.
+
 
 Docker facilita la portabilidad y despliegue de la API.
