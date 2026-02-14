@@ -1,61 +1,95 @@
-# 🚀 Virtualización y APIs de Machine Learning
+# 💰 finanzas_API
 
-Este proyecto documenta el proceso de despliegue de una API de predicción utilizando **FastAPI**, **Docker** y **Vagrant**, cumpliendo con los requerimientos de virtualización y contenedorización.
+Una API en Python para estimar gastos mensuales y cálculo de saldo disponible según ingresos y gastos.  
+Construida con **FastAPI**, entrenada con **Scikit-Learn** y empaquetada en **Docker**.  
 
-## 🛠️ 1. Infraestructura y Virtualización (Vagrant & Linux)
-El entorno de desarrollo se configuró sobre una máquina virtual para garantizar aislamiento:
-* **Entorno:** Ubuntu 18.04 LTS (Bionic) gestionado con Vagrant.
-* **Preparación:** Actualización de paquetes del sistema y gestión de permisos:
-  ```bash
-  sudo apt-get update && sudo apt-get upgrade -y
+---
 
-🧠 **2. Modelo de Machine Learning (train.py)**
-Se implementó un script de entrenamiento que realiza lo siguiente:
+## 🚀 Tecnologías
 
-**Dataset**: Generación de un conjunto de datos estático para el entrenamiento.
-(titanic_model.pkl)
+- Python 3.9+  
+- FastAPI  
+- Scikit-Learn  
+- Pandas & NumPy  
+- Docker  
+- Vagrant (para entorno Linux reproducible)  
 
-Entrenamiento: Creación de un modelo de Machine Learning (ej. Clasificación).
+---
 
-Persistencia: Exportación del modelo entrenado al archivo .model.pkl
+## 🛠️ Instalación y ejecución
 
-⚡ **3. FastAPI funcional (main.py)**
-La API se construyó con FastAPI incluyendo los siguientes endpoints:
+### 1️⃣ Clonar el repositorio
 
-GET /: Endpoint de prueba para verificar el estado de la API.
+```bash
+git clone https://github.com/jhois0027/finanzas_API.git
 
-POST /predict: Recibe peticiones con datos y retorna la predicción usando el archivo ..pkl
+cd finanzas_API
 
-🧪 **4. Pruebas Unitarias (test/test_main.py)**
-Se desarrollaron pruebas para validar la funcionalidad de los endpoints utilizando , asegurando que la API responda correctamente a las peticiones GET y POST.pytest
+2️⃣ Usando Vagrant (Linux VM)
+vagrant up
+vagrant ssh
+cd /vagrant/finanzas_API
 
-🐳 **5. Contenedorización (Dockerfile)**
-El fue configurado siguiendo los estándares solicitados:Dockerfile
+3️⃣ Construir y correr Docker
+# Construir imagen
+docker build -t finanzas_api:1.0 .
 
-Instalación de dependencias: Basado en .requirements.txt
+# Correr API
+docker run -p 8000:8000 finanzas_api:1.0
+Abre tu navegador en: http://localhost:8000/docs
 
-Configuración del entorno: Definición de variables necesarias para la ejecución.
+🧮 Uso de la API
+Endpoint principal
+POST /predict
 
-Ejecución de pruebas: Comando para validar los tests antes del despliegue.
+Body JSON:
 
-Levantamiento: Comando automático para iniciar el servidor Uvicorn.
+{
+  "ingresos": 2000000
+  "arriendo": 450000,
+  "servicios": 130000,
+  "transporte": 262500,
+  "mercado": 700000,
+  "otros": 150000,
+  
+}
 
-**Comandos Docker**
-Construir imagen: docker build -t model_api:1.0 .
+Respuesta
+{
+  "salario_mensual": "$2,000,000.00 COP",
+  "gasto_total_estimado": "$1,697,023.25 COP",
+  "dinero_restante": "$302,976.75 COP",
+  "estado_financiero": "La persona tiene capacidad de ahorro.",
 
-Ejecutar localmente: docker run -p 8000:8000 ingrij27/model_api:1.0
+  "mensaje": "La persona gana mensualmente $2,000,000.00 COP. Según sus gastos, el total estimado es $1,697,023.25 COP. Le quedan disponibles $302,976.75 COP. La persona tiene capacidad de ahorro."
+}
 
-🌐 **6. Publicación en Docker Hub**
-La imagen final ha sido etiquetada y publicada exitosamente:
+📂 Estructura del proyecto
+VAGRANT_API/
+├─ .vagrant/
+│  └─ machines/rgloader
+├─ finanzas_API/
+│  ├─ __pycache__/
+│  ├─ .pytest_cache/
+│  ├─ test/
+│  ├─ .gitignore
+│  ├─ dataset_estatico.csv
+│  ├─ Dockerfile
+│  ├─ main.py
+│  ├─ model.pkl
+│  ├─ readme.md
+│  ├─ requirements.txt
+│  └─ train.py
+├─ ubuntu-bionic-18.04-cloudimg-console.log
+└─ Vagrantfile
 
-Usuario: ingrij27
+✨ Autor
+Jhois0027
 
-Repositorio: model_api
+GitHub: https://github.com/jhois0027
 
-Versión/Tag: 1.0
 
-**Comando de descarga**: docker pull ingrij27/model_api:1.0
+📝 Notas
+El dataset es estático y generado aleatoriamente para fines de demostración.
 
-**Conclusion**
-Este proyecto demuestra la correcta integración de Machine Learning, APIs REST, virtualización y contenedorización, aplicando buenas prácticas de desarrollo y despliegue.
-El uso de Vagrant garantiza un entorno controlado, mientras que Docker facilita la portabilidad y escalabilidad del servicio.
+La API puede integrarse con cualquier frontend o app para estimar gastos en tiempo real.

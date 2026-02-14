@@ -1,46 +1,54 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 import pickle
-import numpy as np
 
 app = FastAPI()
 
-# Cargar modelo correcto
-with open("titanic_model.pkl", "rb") as f:
-    model = pickle.load(f)
+# Cargar el modelo entrenado
+with open("model.pkl", "rb") as archivo:
+    modelo = pickle.load(archivo)
 
-# Esquema del JSON
-class Persona(BaseModel):
-    edad: int
-    clase: str
-    sexo: str
+@app.get("/")
+def home():
+    return {"mensaje": "API financiera funcionando correctamente"}
 
-@app.get("/test")
-def test():
-    return {"status": "API Titanic funcionando"}
+@app.get("/predict")
+def predict(
+    salario: float,
+    arriendo: float,
+    servicios: float,
+    transporte: float,
+    mercado: float,
+    otros: float
+):
+    # Predicción del gasto total
+    prediccion = modelo.predict([[arriendo, servicios, transporte, mercado, otros]])
+    gasto_total = round(float(prediccion[0]), 2)
 
-@app.post("/predict")
-def predict(data: Persona):
+    # Dinero restante
+    restante = round(salario - gasto_total, 2)
 
-    # Mapear texto a números
-    clase_map = {"first": 1, "second": 2, "third": 3}
-    sexo_map = {"male": 0, "female": 1}
+    # Formato COP
+    salario_fmt = f"${salario:,.2f} COP"
+    gasto_fmt = f"${gasto_total:,.2f} COP"
+    restante_fmt = f"${restante:,.2f} COP"
 
-    clase = clase_map.get(data.clase.lower())
-    sexo = sexo_map.get(data.sexo.lower())
+    if restante >= 0:
+        estado = "La persona tiene capacidad de ahorro."
+    else:
+        estado = "La persona está en déficit financiero."
 
-    if clase is None or sexo is None:
-        return {"error": "Clase o sexo inválido"}
+    mensaje = (
+        f"La persona gana mensualmente {salario_fmt}. "
+        f"Según sus gastos, el total estimado es {gasto_fmt}. "
+        f"Le quedan disponibles {restante_fmt}. {estado}"
+    )
 
-    X = np.array([[data.edad, clase, sexo]])
-
-    pred = model.predict(X)[0]
-
-    resultado = "Sobrevivió" if pred == 1 else "No sobrevivió"
+    print(mensaje)
 
     return {
-        "edad": data.edad,
-        "clase": data.clase,
-        "sexo": data.sexo,
-        "resultado": resultado
+        "salario_mensual": salario_fmt,
+        "gasto_total_estimado": gasto_fmt,
+        "dinero_restante": restante_fmt,
+        "estado_financiero": estado,
+        "mensaje": mensaje
     }

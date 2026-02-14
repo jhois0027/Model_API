@@ -1,31 +1,44 @@
-# train.py
+import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
 import pickle
 
-# Dataset de ejemplo (simula Titanic)
-# columnas: [edad, clase, sexo]
-# clase: 1=first,2=second,3=third
-# sexo: 0=male,1=female
-X = np.array([
-    [22, 3, 0],
-    [38, 1, 1],
-    [26, 3, 1],
-    [35, 1, 1],
-    [35, 3, 0],
-    [54, 1, 0],
-    [2,  3, 1],
-    [27, 2, 0],
-])
+np.random.seed(42)
 
-# 1=sobrevivió, 0=no sobrevivió
-y = np.array([0, 1, 1, 1, 0, 0, 1, 0])
+# Generar dataset estático con gastos reales
+data = {
+    "arriendo": np.random.randint(300000, 800000, 100),
+    "servicios": np.random.randint(80000, 200000, 100),
+    "transporte": np.random.randint(150000, 400000, 100),
+    "mercado": np.random.randint(400000, 900000, 100),
+    "otros": np.random.randint(100000, 300000, 100),
+}
 
-model = LogisticRegression()
-model.fit(X, y)
+df = pd.DataFrame(data)
 
-# Guardar modelo
-with open("titanic_model.pkl", "wb") as f:
-    pickle.dump(model, f)
+# Variable objetivo: gasto total mensual
+df["gasto_total"] = (
+    df["arriendo"]
+    + df["servicios"]
+    + df["transporte"]
+    + df["mercado"]
+    + df["otros"]
+    + np.random.normal(0, 50000, 100)  # pequeño ruido
+)
 
-print("Modelo entrenado y guardado como titanic_model.pkl")
+df.to_csv("dataset_estatico.csv", index=False)
+
+print("Dataset generado correctamente.")
+
+X = df[["arriendo", "servicios", "transporte", "mercado", "otros"]]
+y = df["gasto_total"]
+
+modelo = LinearRegression()
+modelo.fit(X, y)
+
+print("Modelo entrenado correctamente.")
+
+with open("model.pkl", "wb") as archivo:
+    pickle.dump(modelo, archivo)
+
+print("Modelo guardado como model.pkl")
